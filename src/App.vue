@@ -29,6 +29,19 @@ export default {
     };
   },
   mounted() {
+    let urls = [
+    "https://api.punkapi.com/v2/beers?page=1&per_page=80",
+    "https://api.punkapi.com/v2/beers?page=2&per_page=80",
+    "https://api.punkapi.com/v2/beers?page=3&per_page=80",
+    "https://api.punkapi.com/v2/beers?page=4&per_page=80",
+    "https://api.punkapi.com/v2/beers?page=5&per_page=80",
+  ]
+  let requests = urls.map(url => fetch(url));
+  Promise.all(requests)
+  .then(responses => Promise.all(responses.map(res => res.json())))
+  .then(data => data = [].concat.apply([], data))
+  .then(mergedData => this.beers = mergedData),
+  
     this.getBeers(),
     eventBus.$on('deleted-beer', (beer) => {
         this.deleteFromFav(beer);
