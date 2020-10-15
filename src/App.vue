@@ -5,7 +5,7 @@
       <beer-list :beers="beers"></beer-list>
       <beer-detail :beer="selectedBeer"></beer-detail>
 
-      <button v-if="!favouriteBeers.includes(selectedBeer)" v-on:click="addToFav">Add as favourite:</button>
+      <button class="fav-button" v-if="!favouriteBeers.includes(selectedBeer)" v-on:click="addToFav">Add as favourite</button>
 
       <favourite-beers :favouriteBeers="favouriteBeers"></favourite-beers>
       
@@ -29,7 +29,10 @@ export default {
     };
   },
   mounted() {
-    this.getBeers()
+    this.getBeers(),
+    eventBus.$on('deleted-beer', (beer) => {
+        this.deleteFromFav(beer);
+    })
   },
   components: {
     'beer-list': BeersList,
@@ -56,8 +59,10 @@ export default {
     addToFav: function() {
         this.favouriteBeers.push(this.selectedBeer)
       },
-    deleteFromFav: function() {
-        this.favouriteBeers.pop(this.selectedBeer)
+    deleteFromFav: function(favouriteBeer) {
+      let index = this.favouriteBeers.indexOf(favouriteBeer);
+      console.log(favouriteBeer);
+      this.favouriteBeers.splice(index, 1);
     },
   }
 }
@@ -84,5 +89,35 @@ ul {
 
 .fav-beer-img {
   height: 50px;
+}
+
+.x{
+  color: red;
+  background-color: black;
+  border-radius: 25%;
+  border: 2px solid red;
+  font-size: 9px;
+}
+
+.x:hover {
+  background-color: red;
+  color: black;
+}
+
+.fav-button{
+  font-size: 20px;
+  color:white;
+  background-color: black;
+  border: 2px solid whitesmoke;
+}
+
+.fav-button:hover {
+  background-color:whitesmoke;
+  color: black;
+  box-shadow: 0 0 5px 5px slategrey;
+}
+
+button {
+transition-duration: 0.5s;
 }
 </style>
