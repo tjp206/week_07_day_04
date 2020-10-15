@@ -2,8 +2,13 @@
   <div id="app">
     <h1>Welcome to BrewDog</h1>
     <section>
-      <beer-list :beers="beers"></beer-list>
-      <beer-detail :beer="selectedBeer"></beer-detail>
+      <label for="character-selected">Select a beer:</label>
+      <select id="character-selected" v-model="selectedBeer">
+        <option disabled value="">Choose your beer</option>
+        <option v-for="(beer, index) in beers" :value="beer" :key='index'>{{beer.name}}</option>
+      </select>
+      <!-- <beer-list :beers="beers"></beer-list> -->
+      <beer-detail :beer="selectedBeer"></beer-detail><br><br>
 
       <button class="fav-button" v-if="!favouriteBeers.includes(selectedBeer)" v-on:click="addToFav">Add as favourite</button>
 
@@ -41,7 +46,7 @@ export default {
   .then(responses => Promise.all(responses.map(res => res.json())))
   .then(data => data = [].concat.apply([], data))
   .then(mergedData => this.beers = mergedData),
-  
+
     this.getBeers(),
     eventBus.$on('deleted-beer', (beer) => {
         this.deleteFromFav(beer);
